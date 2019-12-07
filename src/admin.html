@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>管理页面</title>
+</head>
+<body>
+	<script src="../node_modules/leancloud-storage/dist/av-min.js"></script>
+	<script type="text/javascript">
+		AV.init({
+		  appId: "BFFUrRFFUd3x0SGlJhMrCrsf-gzGzoHsz",
+		  appKey: "BN0hpBSGY8wHNpYSqz9NUsCR",
+		  serverURLs: "https://BFFUrRFF.api.lncld.net"
+		});
+		//创建数据库
+		var TestObject = AV.Object.extend('Playlist');
+		//创建一条记录
+		var testObject = new TestObject();
+			//第一种方式创建表数据 名 值 key value
+				// testObject.set('words', 'Hello world!');
+		//保存
+		testObject.save({
+			//第二种方式 传入对象
+			name:"test",
+			cover:"test",
+			songs:["1","2"],
+			creatorId:"test",
+			description:"test"
+		}).then(function (testObject) {
+		  alert('保存成功。')
+		},()=>alert("fuck"))
+	</script>
+</body>
+</html>
