@@ -5,8 +5,50 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta http-equiv="X-UA-Compatible" content="ie=edge">
 		<title>管理页面</title>
+		<link rel="stylesheet" href="css/default.css">
 	</head>
 	<body>
+		<div class="page">
+			<aside>
+				<div class="newSong">新建歌曲</div>
+				<ul class="songList">
+					<li>歌曲1</li>
+					<li class="active">歌曲2</li>
+					<li>歌曲3</li>
+					<li>歌曲4</li>
+				</ul>
+				<div class="uploadArea">
+					<div id="uploadContainer" class="draggable">
+						<div id="uploadButton" class="clickable">
+							<p>点击或拖曳上传</p>
+							<p>文件大小不能超过8 MB</p>
+						</div>
+					</div>
+					<div id="uploadStatus"></div>
+					<audio src="" controls id="audioDemo">当前浏览器不支持audio</audio>
+				</div>
+			</aside>
+			<main>
+				<h1>新建歌曲</h1>
+				<form class="form">
+					<div class="row"> 
+						<label>歌名</label>
+						<input type="text">
+					</div>
+					<div class="row">
+						<label>歌手</label>
+						<input type="text">
+					</div>
+					<div class="row">
+						<label>外链</label>
+						<input type="text">
+					</div>
+					<div class="row actions">
+						<button type="submit">保存</button>
+					</div>
+				</form>
+			</main>
+		</div>
 		<script src="../node_modules/leancloud-storage/dist/av-min.js"></script>
 		<script type="text/javascript">
 			AV.init({
@@ -14,63 +56,20 @@
 				appKey: "BN0hpBSGY8wHNpYSqz9NUsCR",
 				serverURLs: "https://BFFUrRFF.api.lncld.net"
 			});
-			//创建数据库
-			var TestObject = AV.Object.extend('Playlist');
-			//创建一条记录
-			var testObject = new TestObject();
-			//第一种方式创建表数据 名 值 key value
-			// testObject.set('words', 'Hello world!');
-			//保存
-			testObject.save({
-				//第二种方式 传入对象
-				name: "test",
-				cover: "test",
-				songs: ["1", "2"],
-				creatorId: "test",
-				description: "test"
-			}).then(function(testObject) {
-				alert('保存成功。')
-			}, () => alert("fuck"))
 		</script>
-
-		<style>
-			* {
-				margin: 0;
-				padding: 0;
-			}
-
-			#tuoye {
-				padding: 50px 80px;
-				border-radius: 20px;
-				border: 2px dashed #ddd;
-				display: flex;
-				align-content: center;
-				justify-content: center;
-				width: 200px;
-				flex-direction: column;
-			}
-		</style>
-		<div id="tuoye">
-			<span id="upload">点击或拖曳上传</span>
-			<p>文件大小不能超过8 MB</p>
-		</div>
-		<div id="uploadStatus"></div>
-		<audio src="" controls id="audioDemo">当前浏览器不支持audio</audio>
 
 		<script src="../node_modules/plupload/js/plupload.full.min.js"></script>
 		<script src="../node_modules/qiniu-js/dist/qiniu.min.js"></script>
 		<script>
 			var uploader = Qiniu.uploader({
 				runtimes: 'html5', // 上传模式,依次退化
-				browse_button: 'upload', // 上传选择的点选按钮，**必需**
+				browse_button: 'uploadButton', // 上传选择的点选按钮，**必需**
 				uptoken_url: 'http://localhost:8888/uptoken', // Ajax 请求 uptoken 的 Url，**强烈建议设置**（服务端提供）
 				domain: 'q28i5lzjw.bkt.clouddn.com', // bucket 域名，下载资源时用到，如：'http://xxx.bkt.clouddn.com/' **必需**
-
 				get_new_uptoken: false, // 设置上传文件的时候是否每次都重新获取新的 uptoken
-
 				max_file_size: '8mb', // 最大文件体积限制	    
 				dragdrop: true, // 开启可拖曳上传
-				drop_element: 'tuoye', // 拖曳上传区域元素的 ID，拖曳文件或文件夹后可触发上传   
+				drop_element: 'uploadContainer', // 拖曳上传区域元素的 ID，拖曳文件或文件夹后可触发上传   
 				auto_start: true, // 选择文件后自动上传，若关闭需要自己绑定事件触发上传,
 				init: {
 					'FilesAdded': function(up, files) {
@@ -114,15 +113,10 @@
 						// 若想在前端对每个文件的key进行个性化处理，可以配置该函数
 						// 该配置必须要在 unique_names: false , save_key: false 时才生效
 						var key = file.name;
-						// // do something with key here
 						return key
 					}
 				}
 			});
-
-			// domain 为七牛空间（bucket)对应的域名，选择某个空间后，可通过"空间设置->基本设置->域名设置"查看获取
-
-			// uploader 为一个 plupload 对象，继承了所有 plupload 的方法，参考http://plupload.com/docs
 		</script>
 	</body>
 </html>
