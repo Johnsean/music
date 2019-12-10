@@ -26,17 +26,15 @@
 			</aside>
 			<main></main>
 		</div>
+		<!-- 引入数据库 -->
 		<script src="../node_modules/leancloud-storage/dist/av-min.js"></script>
-		<script type="text/javascript">
-			AV.init({
-				appId: "BFFUrRFFUd3x0SGlJhMrCrsf-gzGzoHsz",
-				appKey: "BN0hpBSGY8wHNpYSqz9NUsCR",
-				serverURLs: "https://BFFUrRFF.api.lncld.net"
-			});
-		</script>
-
+		<script src="./js/initializers/av.js"></script>
+		<!-- 引入七牛云 -->
 		<script src="../node_modules/plupload/js/plupload.full.min.js"></script>
 		<script src="../node_modules/qiniu-js/dist/qiniu.min.js"></script>
+		<!-- 事件处理中心 -->
+		<script src="./js/event-hub.js"></script>
+		<!-- 各个模块 -->
 		<script src="./js/song-form.js"></script>
 		<script src="./js/new-song.js"></script>
 		<script src="./js/song-list.js"></script>
