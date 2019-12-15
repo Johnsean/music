@@ -5,7 +5,6 @@
 			this.$el = $(this.el)
 		},
 		template:`
-			<h1>新建歌曲</h1>
 			<form class="form">
 				<div class="row"> 
 					<label>歌名</label>
@@ -31,6 +30,11 @@
 				html = html.replace(`__${string}__`, data[string]||"")
 			})
 			$(this.el).html(html)
+			if(data.id){
+				$(this.el).prepend("<h1>编辑歌曲</h1>")
+			}else{
+				$(this.el).prepend("<h1>新建歌曲</h1>")
+			}
 		},
 		reset(){
 			this.render({})
@@ -55,6 +59,16 @@
 			}, function (error) {
 			  console.log(error);
 			});
+		},
+		update(data){
+			var song = AV.Object.createWithoutData('Song', this.data.id);
+			song.set('name', data.name);
+			song.set('singer', data.singer);
+			song.set('url', data.url);
+			return song.save().then((response)=>{
+				Object.assign(this.data,data)
+				return response
+			});
 		}
 	}
 	let controller = {
@@ -64,27 +78,57 @@
 			this.model = model
 			this.view.render(this.model.data)
 			this.bindEvents()
-			window.eventHub.on("upload",(data)=>{
+			window.eventHub.on("select",(data)=>{
 				this.model.data = data
 				this.view.render(this.model.data)
 			})
+			window.eventHub.on("new",(data)=>{
+				if(this.model.data.id){
+					this.model.data = {
+						name:"",url:"",singer:"",id:""
+					}
+				}else{
+					Object.assign(this.model.data,data)
+				}
+				this.view.render(this.model.data)
+			})
+		},
+		create(){
+			let needs = "name singer url".split(" ")
+			let data = {}
+			needs.map((string)=>{
+				data[string] = this.view.$el.find(`input[name="${string}"]`).val()
+			})
+			this.model.create(data)
+				.then(()=>{  //上面的return Promise给这个then用
+					this.view.reset()
+					//深拷贝 传复制后的对象出去 避免引用同一块旧内存
+					let string = JSON.stringify(this.model.data)
+					let object = JSON.parse(string)
+					window.eventHub.emit("create", object)
+				})
+		},
+		update(){
+			let needs = "name singer url".split(" ")
+			let data = {}
+			needs.map((string)=>{
+				data[string] = this.view.$el.find(`input[name="${string}"]`).val()
+			})
+			this.model.update(data)
+				.then(()=>{
+					console.log("更新成功")
+					window.eventHub.emit("update",JSON.parse(JSON.stringify(this.model.data)))
+				})
 		},
 		bindEvents(){
 			this.view.$el.on("submit","form",(e)=>{
 				e.preventDefault()
-				let needs = "name singer url".split(" ")
-				let data = {}
-				needs.map((string)=>{
-					data[string] = this.view.$el.find(`input[name="${string}"]`).val()
-				})
-				this.model.create(data)
-					.then(()=>{  //上面的return Promise给这个then用
-						this.view.reset()
-						//深拷贝 传复制后的对象出去 避免引用同一块旧内存
-						let string = JSON.stringify(this.model.data)
-						let object = JSON.parse(string)
-						window.eventHub.emit("create", object)
-					})
+				
+				if(this.model.data.id){
+					this.update()
+				}else{
+					this.create()
+				}	
 			})
 		}
 	}

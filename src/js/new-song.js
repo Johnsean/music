@@ -14,14 +14,22 @@
 			this.view = view
 			this.model = model
 			this.view.render(this.model.data)
-			window.eventHub.on("upload",(data)=>{
+			this.active()
+			window.eventHub.on("new",(data)=>{
 				this.active()
-				console.log("new song 模块得到了 data:")
-				console.log(data)
+			})
+			window.eventHub.on("select",()=>{
+				this.deactive()
+			})
+			$(this.view.el).on("click",()=>{
+				window.eventHub.emit("new")
 			})
 		},
 		active(){
 			$(this.view.el).addClass("active")
+		},
+		deactive(){
+			$(this.view.el).removeClass("active")
 		}
 	}
 	controller.init(view,model)

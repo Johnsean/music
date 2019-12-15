@@ -8,9 +8,11 @@
 			let $el = $(this.el)
 			$el.html(this.template)
 			
-			let {songs} = data
+			let {songs, selectSongId} = data
 			let liList = songs.map((song)=>{
-				return $("<li></li>").text(song.name)
+				let $li = $("<li></li>").text(song.name).attr("data-id", song.id)
+				if(song.id === selectSongId){ $li.addClass("active")}
+				return $li
 			})
 			$el.find("ul").empty()
 			liList.map((domLi)=>{
@@ -23,7 +25,8 @@
 	}
 	let model = {
 		data:{
-			songs:[] //[{name:1, singer:2, id:3, url:4}, {...}, ...]
+			songs:[], //[{name:1, singer:2, id:3, url:4}, {...}, ...]
+			selectSongId: undefined
 		},
 		find(){
 			var query = new AV.Query('Song');
@@ -39,15 +42,50 @@
 		init(view,model){
 			this.view = view
 			this.model = model
-			this.model.find().then(()=>{
+			this.view.render(this.model.data)
+			this.bindEvents()
+			this.bindEventHub()
+			this.getAllSongs()
+		},
+		getAllSongs(){
+			return this.model.find().then(()=>{
 				this.view.render(this.model.data)
 			})
-			this.view.render(this.model.data)
-			window.eventHub.on("upload",()=>{
-				this.view.clearActive()
-			}),
+		},
+		bindEvents(){
+			$(this.view.el).on("click","li",(e)=>{
+				let songId = $(e.currentTarget).attr("data-id")
+				
+				this.model.data.selectSongId = songId
+				this.view.render(this.model.data)
+				
+				let data
+				let songs = this.model.data.songs
+				for(let i = 0; i<songs.length; i++){
+					if(songs[i].id === songId){
+						data = songs[i]
+						break
+					}
+				}
+				window.eventHub.emit("select",JSON.parse(JSON.stringify(data)))								
+			})
+		},
+		bindEventHub(){
 			window.eventHub.on("create",(songData)=>{
+				// songs = ["ADDR 108"]
 				this.model.data.songs.push(songData)
+				this.view.render(this.model.data)
+			})
+			window.eventHub.on("new",()=>{
+				this.view.clearActive()
+			})
+			window.eventHub.on("update",(song)=>{
+				let songs = this.model.data.songs
+				for(let i = 0; i<songs.length; i++){
+					if(songs[i].id === song.id){
+						Object.assign(songs[i],song)
+					}
+				}
 				this.view.render(this.model.data)
 			})
 		}
