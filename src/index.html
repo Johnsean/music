@@ -91,7 +91,13 @@
       </li>
     </ol>
   </div>
-
+  <script >
+	  window.onerror = function(message, file, row){
+		  alert(message)
+		  alert(file)
+		  alert(row)
+	  }
+  </script>
   <script src="../node_modules/jquery/dist/jquery.min.js"></script>
   <!-- 引入数据库 -->
   <script src="../node_modules/leancloud-storage/dist/av-min.js"></script>
