@@ -91,11 +91,13 @@
       </li>
     </ol>
   </div>
-  <script >
+  <script src="https://cdn.bootcss.com/vConsole/3.3.4/vconsole.min.js"></script>
+  <script>
+	  var vConsole = new VConsole();
 	  window.onerror = function(message, file, row){
-		  alert(message)
-		  alert(file)
-		  alert(row)
+		  console.log(message)
+		  console.log(file)
+		  console.log(row)
 	  }
   </script>
   <script src="../node_modules/jquery/dist/jquery.min.js"></script>
