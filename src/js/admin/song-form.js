@@ -22,13 +22,17 @@
 					<label>封面</label>
 					<input type="text" name="cover" value="__cover__">
 				</div>
+				<div class="row">
+					<label>歌词</label>
+					<textarea cols=100 rows=10 name="lyrics">__lyrics__</textarea>
+				</div>
 				<div class="row actions">
 					<button type="submit">保存</button>
 				</div>
 			</form>
 		`,
 		render(data = {}){ //若没有传data或data为undefined 则 传空对象
-			let placeholders = ["name", "singer", "url", "id","cover"]
+			let placeholders = ["name", "singer", "url", "id", "cover", "lyrics"]
 			let html = this.template
 			placeholders.map((string)=>{
 				html = html.replace(`__${string}__`, data[string]||"")
@@ -46,7 +50,7 @@
 	}
 	let model = {
 		data:{
-			name:"",url:"",singer:"",id:"",cover:""
+			name:"",url:"",singer:"",id:"",cover:"",lyrics:""
 		},
 		create(data){
 			var Song = AV.Object.extend('Song');
@@ -55,6 +59,7 @@
 			song.set('singer', data.singer);	
 			song.set('url', data.url);
 			song.set('cover', data.cover);
+			song.set('lyrics', data.lyrics);
 			
 			return song.save().then((newsong)=>{ //这里的this 为model,箭头函数没有this. 用function 则this变为window
 				let {attributes,id} = newsong  // 等价于 let attribute/id = newsong.attribute/id ...	
@@ -71,6 +76,7 @@
 			song.set('singer', data.singer);
 			song.set('url', data.url);
 			song.set('cover', data.cover);
+			song.set('lyrics', data.lyrics);
 			return song.save().then((response)=>{
 				Object.assign(this.data,data)
 				return response
@@ -91,7 +97,7 @@
 			window.eventHub.on("new",(data)=>{
 				if(this.model.data.id){
 					this.model.data = {
-						name:"",url:"",singer:"",id:""
+						name:"",url:"",singer:"",id:"",lyrics:""
 					}
 				}else{
 					Object.assign(this.model.data,data)
@@ -100,10 +106,10 @@
 			})
 		},
 		create(){
-			let needs = "name singer url cover".split(" ")
+			let needs = "name singer url cover lyrics".split(" ")
 			let data = {}
 			needs.map((string)=>{
-				data[string] = this.view.$el.find(`input[name="${string}"]`).val()
+				data[string] = this.view.$el.find(`[name="${string}"]`).val()
 			})
 			this.model.create(data)
 				.then(()=>{  //上面的return Promise给这个then用
@@ -115,10 +121,10 @@
 				})
 		},
 		update(){
-			let needs = "name singer url cover".split(" ")
+			let needs = "name singer url cover lyrics".split(" ")
 			let data = {}
 			needs.map((string)=>{
-				data[string] = this.view.$el.find(`input[name="${string}"]`).val()
+				data[string] = this.view.$el.find(`[name="${string}"]`).val()
 			})
 			this.model.update(data)
 				.then(()=>{
