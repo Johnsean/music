@@ -4,11 +4,41 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 	<title> 歌 曲 </title>
+	<link rel="stylesheet" href="./css/song.css">
 </head>
 <body>
-	歌 曲 播 放 页 面
-	<div id="app"></div>
-	
+	<div class="page" id="app">
+		<audio src="#" ></audio>
+		<div class="disc-container">
+			<img class="pointer" src="./img/pointer.png" alt="">
+			<div class="disc">
+				<div class="icon-wrapper">
+					<svg class="icon icon-play">
+						<use xlink:href="#icon-play"></use>
+					</svg>
+					<svg class="icon icon-pause">
+						<use xlink:href="#icon-pause"></use>
+					</svg>
+				</div>
+				<img class="ring" src="./img/disc.png" alt="">
+				<img class="light" src="./img/disc-light.png" alt="">
+				<img src="//p1.music.126.net/_ZIyHUML8sXBvJXqLdQDOg==/105553116278617.jpg?imageView&thumbnail=360x0&quality=75&tostatic=0" alt="" class="cover">
+			</div>
+		</div>
+		<div class="song-description">
+			<h1>太平洋的风-胡德夫</h1>
+			<div class="lyric">
+				<div class="lines">
+					
+				</div>
+			</div>
+		</div>
+		<div class="links">
+			<a href="#">打开</a>
+			<a class="main" href="#">下载</a>
+		</div>
+	</div>
+	<script src="//at.alicdn.com/t/font_9dyko39vtiifi529.js"></script>
 	<script src="../node_modules/jquery/dist/jquery.min.js"></script>
 	<!-- 引入数据库 -->
 	<script src="../node_modules/leancloud-storage/dist/av-min.js"></script>

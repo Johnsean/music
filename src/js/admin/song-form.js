@@ -18,13 +18,17 @@
 					<label>外链</label>
 					<input type="text" name="url" value="__url__">
 				</div>
+				<div class="row">
+					<label>封面</label>
+					<input type="text" name="cover" value="__cover__">
+				</div>
 				<div class="row actions">
 					<button type="submit">保存</button>
 				</div>
 			</form>
 		`,
 		render(data = {}){ //若没有传data或data为undefined 则 传空对象
-			let placeholders = ["name", "singer", "url", "id"]
+			let placeholders = ["name", "singer", "url", "id","cover"]
 			let html = this.template
 			placeholders.map((string)=>{
 				html = html.replace(`__${string}__`, data[string]||"")
@@ -42,7 +46,7 @@
 	}
 	let model = {
 		data:{
-			name:"",url:"",singer:"",id:""
+			name:"",url:"",singer:"",id:"",cover:""
 		},
 		create(data){
 			var Song = AV.Object.extend('Song');
@@ -50,6 +54,7 @@
 			song.set('name', data.name);
 			song.set('singer', data.singer);	
 			song.set('url', data.url);
+			song.set('cover', data.cover);
 			
 			return song.save().then((newsong)=>{ //这里的this 为model,箭头函数没有this. 用function 则this变为window
 				let {attributes,id} = newsong  // 等价于 let attribute/id = newsong.attribute/id ...	
@@ -65,6 +70,7 @@
 			song.set('name', data.name);
 			song.set('singer', data.singer);
 			song.set('url', data.url);
+			song.set('cover', data.cover);
 			return song.save().then((response)=>{
 				Object.assign(this.data,data)
 				return response
@@ -94,7 +100,7 @@
 			})
 		},
 		create(){
-			let needs = "name singer url".split(" ")
+			let needs = "name singer url cover".split(" ")
 			let data = {}
 			needs.map((string)=>{
 				data[string] = this.view.$el.find(`input[name="${string}"]`).val()
@@ -109,7 +115,7 @@
 				})
 		},
 		update(){
-			let needs = "name singer url".split(" ")
+			let needs = "name singer url cover".split(" ")
 			let data = {}
 			needs.map((string)=>{
 				data[string] = this.view.$el.find(`input[name="${string}"]`).val()
