@@ -111,7 +111,7 @@
 			})
 			window.eventHub.on("songEnd",()=>{
 				this.model.data.status = "paused"
-				this,view.render(this.model.data)
+				this.view.render(this.model.data)
 			})
 		},
 		getSongId(){
